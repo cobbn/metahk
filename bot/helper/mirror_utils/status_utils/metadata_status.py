@@ -5,7 +5,7 @@ from bot import LOGGER
 from bot.helper.ext_utils.bot_utils import EngineStatus, get_readable_file_size, MirrorStatus
  
  
- class MetadataStatus:
+class MetadataStatus:
      def __init__(self, name, size, gid, listener):
          self.__name = name
          self.__gid = gid
