@@ -43,11 +43,13 @@ desp_dict = {'rcc': ['RClone is a command-line program to sync files and directo
             'user_tds': [f'UserTD helps to Upload files via Bot to your Custom Drive Destination via Global SA mail\n\n➲ <b>SA Mail :</b> {"Not Specified" if "USER_TD_SA" not in config_dict else config_dict["USER_TD_SA"]}', 'Send User TD details for Use while Mirror/Clone\n➲ <b>Format:</b>\nname id/link index(optional)\nname2 link2/id2 index(optional)\n\n<b>NOTE:</b>\n<i>1. Drive ID must be valid, then only it will accept\n2. Names can have spaces\n3. All UserTDs are updated on every change\n4. To delete specific UserTD, give Name(s) separated by each line</i>\n\n<b>Timeout:</b> 60 sec'],
             'gofile': ['Gofile is a free file sharing and storage platform. You can store and share your content without any limit.', "Send GoFile's API Key. Get it on https://gofile.io/myProfile, It will not be Accepted if the API Key is Invalid !!\n<b>Timeout:</b> 60 sec"],
             'streamtape': ['Streamtape is free Video Streaming & sharing Hoster', "Send StreamTape's Login and Key\n<b>Format:</b> <code>user_login:pass_key</code>\n<b>Timeout:</b> 60 sec"],
+            'lmeta': ['Your Channel Name that will be used while editing metadata of the Video File', 'Send Metadata Text for Leeching Files. \n <b>What is Metadata? 👉 <a href="https://te.legra.ph/What-is-Metadata-07-03">Click Here</a></b> \n<b>Timeout:</b> 60 Sec.'],
             }
 fname_dict = {'rcc': 'RClone',
              'lprefix': 'Prefix',
              'lsuffix': 'Suffix',
              'lremname': 'Remname',
+             'lmeta': 'Metadata',
              'mprefix': 'Prefix',
              'msuffix': 'Suffix',
              'mremname': 'Remname',
@@ -171,11 +173,14 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
         buttons.ibutton("Leech Dump", f"userset {user_id} ldump")
         ldump = 'Not Exists' if (val:=user_dict.get('ldump', '')) == '' else len(val)
 
+        lmeta = 'Not Exists' if (val:=user_dict.get('lmeta', config_dict.get('METADATA', ''))) == '' else val
+        buttons.ibutton(f"{'✅️' if lmeta != 'Not Exists' else ''} Metadata", f"userset {user_id} lmeta")
+
         text = BotTheme('LEECH', NAME=name, DL=f"{dailyll} / {dailytlle}",
                 LTYPE=ltype, THUMB=thumbmsg, SPLIT_SIZE=split_size,
                 EQUAL_SPLIT=equal_splits, MEDIA_GROUP=media_group,
                 LCAPTION=escape(lcaption), LPREFIX=escape(lprefix),
-                LSUFFIX=escape(lsuffix), LDUMP=ldump, LREMNAME=escape(lremname))
+                LSUFFIX=escape(lsuffix), LDUMP=ldump, LREMNAME=escape(lremname), LMETA=escape(lmeta))
 
         buttons.ibutton("Back", f"userset {user_id} back", "footer")
         buttons.ibutton("Close", f"userset {user_id} close", "footer")
@@ -187,31 +192,31 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
                 if enabled:
                     serv_list.append(serv)
                     ddl_serv += 1
-        text = f"㊂ <b><u>{fname_dict[key]} Settings :</u></b>\n\n" \
-               f"➲ <b>Enabled DDL Server(s) :</b> <i>{ddl_serv}</i>\n\n" \
-               f"➲ <b>Description :</b> <i>{desp_dict[key][0]}</i>"
+        text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n" \
+               f"<b>Enabled DDL Server(s) :</b> <i>{ddl_serv}</i>\n\n" \
+               f"<b>Description :</b> <i>{desp_dict[key][0]}</i>"
         for btn in ['gofile', 'streamtape']:
             buttons.ibutton(f"{'✅️' if btn in serv_list else ''} {fname_dict[btn]}", f"userset {user_id} {btn}")
         buttons.ibutton("Back", f"userset {user_id} back mirror", "footer")
         buttons.ibutton("Close", f"userset {user_id} close", "footer")
         button = buttons.build_menu(2)
     elif edit_type:
-        text = f"㊂ <b><u>{fname_dict[key]} Settings :</u></b>\n\n"
+        text = f"<b><u>{fname_dict[key]} Settings :</u></b>\n\n"
         if key == 'rcc':
             set_exist = await aiopath.exists(rclone_path)
-            text += f"➲ <b>RClone.Conf File :</b> <i>{'' if set_exist else 'Not'} Exists</i>\n\n"
+            text += f"<b>RClone.Conf File :</b> <i>{'' if set_exist else 'Not'} Exists</i>\n\n"
         elif key == 'thumb':
             set_exist = await aiopath.exists(thumbpath)
-            text += f"➲ <b>Custom Thumbnail :</b> <i>{'' if set_exist else 'Not'} Exists</i>\n\n"
+            text += f"<b>Custom Thumbnail :</b> <i>{'' if set_exist else 'Not'} Exists</i>\n\n"
         elif key == 'yt_opt':
             set_exist = 'Not Exists' if (val:=user_dict.get('yt_opt', config_dict.get('YT_DLP_OPTIONS', ''))) == '' else val
-            text += f"➲ <b>YT-DLP Options :</b> <code>{escape(set_exist)}</code>\n\n"
+            text += f"<b>YT-DLP Options :</b> <code>{escape(set_exist)}</code>\n\n"
         elif key == 'usess':
             set_exist = 'Exists' if user_dict.get('usess') else 'Not Exists'
-            text += f"➲ <b>{fname_dict[key]} :</b> <code>{set_exist}</code>\n➲ <b>Encryption :</b> {'🔐' if set_exist else '🔓'}\n\n"
+            text += f"<b>{fname_dict[key]} :</b> <code>{set_exist}</code>\n➲ <b>Encryption :</b> {'🔐' if set_exist else '🔓'}\n\n"
         elif key == 'split_size':
             set_exist = get_readable_file_size(config_dict['LEECH_SPLIT_SIZE']) + ' (Default)' if user_dict.get('split_size', '') == '' else get_readable_file_size(user_dict['split_size'])
-            text += f"➲ <b>Leech Split Size :</b> <i>{set_exist}</i>\n\n"
+            text += f"<b>Leech Split Size :</b> <i>{set_exist}</i>\n\n"
             if user_dict.get('equal_splits', False) or ('equal_splits' not in user_dict and config_dict['EQUAL_SPLITS']):
                 buttons.ibutton("Disable Equal Splits", f"userset {user_id} esplits", "header")
             else:
@@ -220,19 +225,19 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
                 buttons.ibutton("Disable Media Group", f"userset {user_id} mgroup", "header")
             else:
                 buttons.ibutton("Enable Media Group", f"userset {user_id} mgroup", "header")
-        elif key in ['lprefix', 'lremname', 'lsuffix', 'lcaption', 'ldump']:
+        elif key in ['lprefix', 'lremname', 'lsuffix', 'lcaption', 'ldump', 'lmeta']:
             set_exist = 'Not Exists' if (val:=user_dict.get(key, config_dict.get(f'LEECH_FILENAME_{key[1:].upper()}', ''))) == '' else val
             if set_exist != 'Not Exists' and key == "ldump":
                 set_exist = '\n\n' + '\n'.join([f"{index}. <b>{dump}</b> : <code>{ids}</code>" for index, (dump, ids) in enumerate(val.items(), start=1)])
-            text += f"➲ <b>Leech Filename {fname_dict[key]} :</b> {set_exist}\n\n"
+            text += f"<b>Leech Filename {fname_dict[key]} :</b> {set_exist}\n\n"
         elif key in ['mprefix', 'mremname', 'msuffix']:
             set_exist = 'Not Exists' if (val:=user_dict.get(key, config_dict.get(f'MIRROR_FILENAME_{key[1:].upper()}', ''))) == '' else val
-            text += f"➲ <b>Mirror Filename {fname_dict[key]} :</b> {set_exist}\n\n"
+            text += f"<b>Mirror Filename {fname_dict[key]} :</b> {set_exist}\n\n"
         elif key in ['gofile', 'streamtape']:
             set_exist = 'Exists' if key in (ddl_dict:=user_dict.get('ddl_servers', {})) and ddl_dict[key][1] and ddl_dict[key][1] != '' else 'Not Exists'
             ddl_mode = 'Enabled' if key in (ddl_dict:=user_dict.get('ddl_servers', {})) and ddl_dict[key][0] else 'Disabled'
-            text = f"➲ <b>Upload {fname_dict[key]} :</b> {ddl_mode}\n" \
-                   f"➲ <b>{fname_dict[key]}'s API Key :</b> {set_exist}\n\n"
+            text = f"<b>Upload {fname_dict[key]} :</b> {ddl_mode}\n" \
+                   f"<b>{fname_dict[key]}'s API Key :</b> {set_exist}\n\n"
             buttons.ibutton('Disable DDL' if ddl_mode == 'Enabled' else 'Enable DDL', f"userset {user_id} s{key}", "header")
         elif key == 'user_tds':
             set_exist = len(val) if (val:=user_dict.get(key, False)) else 'Not Exists'
@@ -240,11 +245,11 @@ async def get_user_settings(from_user, key=None, edit_type=None, edit_mode=None)
             buttons.ibutton('Disable UserTDs' if tds_mode == 'Enabled' else 'Enable UserTDs', f"userset {user_id} td_mode", "header")
             if not config_dict['USER_TD_MODE']:
                 tds_mode = "Force Disabled"
-            text += f"➲ <b>User TD Mode :</b> {tds_mode}\n"
-            text += f"➲ <b>{fname_dict[key]} :</b> {set_exist}\n\n"
+            text += f"<b>User TD Mode :</b> {tds_mode}\n"
+            text += f"<b>{fname_dict[key]} :</b> {set_exist}\n\n"
         else: 
             return
-        text += f"➲ <b>Description :</b> <i>{desp_dict[key][0]}</i>"
+        text += f"<b>Description :</b> <i>{desp_dict[key][0]}</i>"
         if not edit_mode:
             buttons.ibutton(f"Change {fname_dict[key]}" if set_exist and set_exist != 'Not Exists' and (set_exist != get_readable_file_size(config_dict['LEECH_SPLIT_SIZE']) + ' (Default)') else f"Set {fname_dict[key]}", f"userset {user_id} {key} edit")
         else:
@@ -274,26 +279,28 @@ async def user_settings(client, message):
         if set_arg and (reply_to := message.reply_to_message):
             if message.from_user.id != reply_to.from_user.id:
                 return await editMessage(msg, '<i>Reply to Your Own Message for Setting via Args Directly</i>')
-            if set_arg in ['lprefix', 'lsuffix', 'lremname', 'lcaption', 'ldump', 'yt_opt'] and reply_to.text:
+            if set_arg in ['lprefix', 'lsuffix', 'lremname', 'lcaption', 'ldump', 'yt_opt', 'lmeta'] and reply_to.text:
                 return await set_custom(client, reply_to, msg, set_arg, True)
             elif set_arg == 'thumb' and reply_to.media:
                 return await set_thumb(client, reply_to, msg, set_arg, True)
-        await editMessage(msg, '''㊂ <b><u>Available Flags :</u></b>
+        await editMessage(msg, '''<b><u>Available Flags :</u></b>
 >> Reply to the Value with appropriate arg respectively to set directly without opening USet.
 
-➲ <b>Custom Thumbnail :</b>
+<b>Custom Thumbnail :</b>
     /cmd -s thumb
-➲ <b>Leech Filename Prefix :</b>
+<b>Leech Filename Prefix :</b>
     /cmd -s lprefix
-➲ <b>Leech Filename Suffix :</b>
+<b>Leech Filename Suffix :</b>
     /cmd -s lsuffix
-➲ <b>Leech Filename Remname :</b>
+<b>Leech Filename Remname :</b>
     /cmd -s lremname
-➲ <b>Leech Filename Caption :</b>
+<b>Leech Filename Caption :</b>
     /cmd -s lcaption
-➲ <b>YT-DLP Options :</b>
+<b>Leech Metadata Text :</b>
+     /cmd -s lmeta
+<b>YT-DLP Options :</b>
     /cmd -s yt_opt
-➲ <b>Leech User Dump :</b>
+<b>Leech User Dump :</b>
     /cmd -s ldump''')
     else:
         from_user = message.from_user
@@ -355,7 +362,7 @@ async def set_custom(client, message, pre_event, key, direct=False):
         if key == 'usess':
             password = Fernet.generate_key()
             try:
-                await deleteMessage(await (await sendCustomMsg(message.from_user.id, f"<u><b>Decryption Key:</b></u> \n┃\n┃ <code>{password.decode()}</code>\n┃\n┖ <b>Note:</b> <i>Keep this Key Securely, this is not Stored in Bot and Access Key to use your Session...</i>")).pin(both_sides=True))
+                await deleteMessage(await (await sendCustomMsg(message.from_user.id, f"<u><b>Decryption Key:</b></u> \n<code>{password.decode()}</code>\n<b>Note:</b> <i>Keep this Key Securely, this is not Stored in Bot and Access Key to use your Session...</i>")).pin(both_sides=True))
                 encrypt_sess = Fernet(password).encrypt(value.encode())
                 value = encrypt_sess.decode()
             except Exception:
@@ -471,7 +478,7 @@ async def edit_user_settings(client, query):
     elif data[2] == 'show_tds':
         handler_dict[user_id] = False
         user_tds = user_dict.get('user_tds', {})
-        msg = f'➲ <b><u>User TD(s) Details</u></b>\n\n<b>Total UserTD(s) :</b> {len(user_tds)}\n\n'
+        msg = f'<b><u>User TD(s) Details</u></b>\n\n<b>Total UserTD(s) :</b> {len(user_tds)}\n\n'
         for index_no, (drive_name, drive_dict) in enumerate(user_tds.items(), start=1):
             msg += f'{index_no}: <b>Name:</b> <code>{drive_name}</code>\n'
             msg += f"  <b>Drive ID:</b> <code>{drive_dict['drive_id']}</code>\n"
@@ -608,7 +615,7 @@ async def edit_user_settings(client, query):
         pfunc = partial(set_custom, pre_event=query, key=data[2])
         rfunc = partial(update_user_settings, query, data[2], 'mirror' if data[2] in ['ddl_servers', 'user_tds'] else "ddl_servers")
         await event_handler(client, query, pfunc, rfunc)
-    elif data[2] in ['lprefix', 'lsuffix', 'lremname', 'lcaption', 'ldump', 'mprefix', 'msuffix', 'mremname']:
+    elif data[2] in ['lprefix', 'lsuffix', 'lremname', 'lcaption', 'ldump', 'mprefix', 'msuffix', 'mremname', 'lmeta']:
         handler_dict[user_id] = False
         await query.answer()
         edit_mode = len(data) == 4
@@ -618,7 +625,7 @@ async def edit_user_settings(client, query):
         pfunc = partial(set_custom, pre_event=query, key=data[2])
         rfunc = partial(update_user_settings, query, data[2], return_key)
         await event_handler(client, query, pfunc, rfunc)
-    elif data[2] in ['dlprefix', 'dlsuffix', 'dlremname', 'dlcaption', 'dldump']:
+    elif data[2] in ['dlprefix', 'dlsuffix', 'dlremname', 'dlcaption', 'dldump', 'dlmeta']:
         handler_dict[user_id] = False
         await query.answer()
         update_user_ldata(user_id, data[2][1:], {} if data[2] == 'dldump' else '')

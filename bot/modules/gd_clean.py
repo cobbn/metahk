@@ -22,7 +22,7 @@ async def driveclean(_, message):
         link = f"https://drive.google.com/drive/folders/{config_dict['GDRIVE_ID']}"
     if not is_gdrive_link(link):
         return await sendMessage(message, 'No GDrive Link Provided')
-    clean_msg = await sendMessage(message, '<i>Fetching ...</i>')
+    clean_msg = await sendMessage(message, 'Fetching ...')
     gd = GoogleDriveHelper()
     name, mime_type, size, files, folders = await sync_to_async(gd.count, link)
     try:
@@ -33,11 +33,11 @@ async def driveclean(_, message):
     buttons.ibutton('Move to Bin', f'gdclean clear {drive_id} trash')
     buttons.ibutton('Permanent Clean', f'gdclean clear {drive_id}')
     buttons.ibutton('Stop GDrive Clean', 'gdclean stop', 'footer')
-    await editMessage(clean_msg, f'''⌬ <b><i>GDrive Clean/Trash :</i></b>
+    await editMessage(clean_msg, f'''<b>GDrive Clean/Trash :</b>
     
-┎ <b>Name:</b> {name}
-┃ <b>Size:</b> {get_readable_file_size(size)}
-┖ <b>Files:</b> {files} | <b>Folders:</b> {folders}
+<b>Name:</b> {name}
+<b>Size:</b> {get_readable_file_size(size)}
+<b>Files:</b> {files} | <b>Folders:</b> {folders}
     
 <b>NOTES:</b>
 <i>1. All files are permanently deleted if Permanent Del, not moved to trash.

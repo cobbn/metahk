@@ -18,7 +18,7 @@ from bot.helper.ext_utils.telegraph_helper import telegraph
 
 
 async def gen_mediainfo(message, link=None, media=None, mmsg=None):
-    temp_send = await sendMessage(message, '<i>Generating MediaInfo...</i>')
+    temp_send = await sendMessage(message, 'Generating MediaInfo...')
     try:
         path = "Mediainfo/"
         if not await aiopath.isdir(path):
@@ -50,8 +50,8 @@ async def gen_mediainfo(message, link=None, media=None, mmsg=None):
         await editMessage(temp_send, f"MediaInfo Stopped due to {str(e)}")
     finally:
         await aioremove(des_path)
-    link_id = (await telegraph.create_page(title='MediaInfo X', content=tc))["path"]
-    await temp_send.edit(f"<b>MediaInfo:</b>\n\n➲ <b>Link :</b> https://graph.org/{link_id}", disable_web_page_preview=False)
+    link_id = (await telegraph.create_page(title='MediaInfo', content=tc))["path"]
+    await temp_send.edit(f"<b>MediaInfo:</b>\n\n<b>Link :</b> https://graph.org/{link_id}", disable_web_page_preview=False)
 
 
 section_dict = {'General': '🗒', 'Video': '🎞', 'Audio': '🔊', 'Text': '🔠', 'Menu': '🗃'}

@@ -67,10 +67,10 @@ async def broadcast(_, message):
             except:
                 u += 1
             t += 1
-        return await editMessage(temp_wait, f'''⌬  <b><i>Broadcast Deleted Stats :</i></b>
-┠ <b>Total Users:</b> <code>{t}</code>
-┠ <b>Success:</b> <code>{s}</code>
-┖ <b>Unsuccess Attempt:</b> <code>{u}</code>
+        return await editMessage(temp_wait, f'''<b>Broadcast Deleted Stats :</b>
+<b>Total Users:</b> <code>{t}</code>
+<b>Success:</b> <code>{s}</code>
+<b>Unsuccess Attempt:</b> <code>{u}</code>
 
 <b>Broadcast ID:</b> <code>{bc_id}</code>''')
     elif edited:
@@ -88,19 +88,19 @@ async def broadcast(_, message):
             except Exception:
                 u += 1
             t += 1
-        return await editMessage(temp_wait, f'''⌬  <b><i>Broadcast Edited Stats :</i></b>
-┠ <b>Total Users:</b> <code>{t}</code>
-┠ <b>Success:</b> <code>{s}</code>
-┖ <b>Unsuccess Attempt:</b> <code>{u}</code>
+        return await editMessage(temp_wait, f'''<b>Broadcast Edited Stats :</b>
+<b>Total Users:</b> <code>{t}</code>
+<b>Success:</b> <code>{s}</code>
+<b>Unsuccess Attempt:</b> <code>{u}</code>
 
 <b>Broadcast ID:</b> <code>{bc_id}</code>''')
     start_time = time()
-    status = '''⌬  <b><i>Broadcast Stats :</i></b>
-┠ <b>Total Users:</b> <code>{t}</code>
-┠ <b>Success:</b> <code>{s}</code>
-┠ <b>Blocked Users:</b> <code>{b}</code>
-┠ <b>Deleted Accounts:</b> <code>{d}</code>
-┖ <b>Unsuccess Attempt:</b> <code>{u}</code>'''
+    status = '''<b>Broadcast Stats :</b>
+<b>Total Users:</b> <code>{t}</code>
+<b>Success:</b> <code>{s}</code>
+<b>Blocked Users:</b> <code>{b}</code>
+<b>Deleted Accounts:</b> <code>{d}</code>
+<b>Unsuccess Attempt:</b> <code>{u}</code>'''
     updater = time()
     bc_hash, bc_msgs = str(uuid4()), []
     pls_wait = await sendMessage(message, status.format(**locals()))

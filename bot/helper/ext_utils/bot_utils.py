@@ -51,6 +51,7 @@ class MirrorStatus:
     STATUS_QUEUEUP     = "QueueUp"
     STATUS_PAUSED      = "Pause"
     STATUS_ARCHIVING   = "Archive"
+    STATUS_METADATA    = "Metadata"
     STATUS_EXTRACTING  = "Extract"
     STATUS_SPLITTING   = "Split"
     STATUS_CHECKING    = "CheckUp"
@@ -141,10 +142,10 @@ def get_progress_bar_string(pct):
     p = min(max(pct, 0), 100)
     cFull = int(p // 8)
     cPart = int(p % 8 - 1)
-    p_str = '■' * cFull
+    p_str = '⬢' * cFull
     if cPart >= 0:
-        p_str += ['▤', '▥', '▦', '▧', '▨', '▩', '■'][cPart]
-    p_str += '□' * (12 - cFull)
+        p_str += ['⬢', '⬢', '⬢', '⬢', '⬢', '⬢', '⬢'][cPart]
+    p_str += '⬡' * (12 - cFull)
     return f"[{p_str}]"
 
 
@@ -214,7 +215,7 @@ def get_readable_message():
             ChatType.SUPERGROUP, ChatType.CHANNEL] and not config_dict['DELETE_LINKS'] else ''
         elapsed = time() - download.message.date.timestamp()
         msg += BotTheme('STATUS_NAME', Name="Task is being Processed!" if config_dict['SAFE_MODE'] and elapsed >= config_dict['STATUS_UPDATE_INTERVAL'] else escape(f'{download.name()}'))
-        if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
+        if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_METADATA]:
             msg += BotTheme('BAR', Bar=f"{get_progress_bar_string(download.progress())} {download.progress()}")
             msg += BotTheme('PROCESSED', Processed=f"{download.processed_bytes()} of {download.size()}")
             msg += BotTheme('STATUS', Status=download.status(), Url=msg_link)
@@ -508,7 +509,7 @@ async def get_stats(event, key="home"):
         btns.ibutton('OS Stats', f'wzmlx {user_id} stats stsys')
         btns.ibutton('Repo Stats', f'wzmlx {user_id} stats strepo')
         btns.ibutton('Bot Limits', f'wzmlx {user_id} stats botlimits')
-        msg = "⌬ <b><i>Bot & OS Statistics!</i></b>"
+        msg = "<b>Bot & OS Statistics!</b>"
     elif key == "stbot":
         total, used, free, disk = disk_usage('/')
         swap = swap_memory()

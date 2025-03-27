@@ -226,6 +226,8 @@ if len(MEGA_EMAIL) == 0 or len(MEGA_PASSWORD) == 0:
     log_warning('MEGA Credentials not provided!')
     MEGA_EMAIL = ''
     MEGA_PASSWORD = ''
+
+METADATA = environ.get('METADATA', '')
     
 GDTOT_CRYPT = environ.get('GDTOT_CRYPT', '')
 if len(GDTOT_CRYPT) == 0:
@@ -495,11 +497,11 @@ IMG_PAGE = int(IMG_PAGE) if IMG_PAGE.isdigit() else ''
 
 AUTHOR_NAME = environ.get('AUTHOR_NAME', '')
 if len(AUTHOR_NAME) == 0:
-    AUTHOR_NAME = 'WZML-X'
+    AUTHOR_NAME = 'Reaperzclub'
 
 AUTHOR_URL = environ.get('AUTHOR_URL', '')
 if len(AUTHOR_URL) == 0:
-    AUTHOR_URL = 'https://t.me/WZML_X'
+    AUTHOR_URL = 'https://t.me/acaatr'
 
 TITLE_NAME = environ.get('TITLE_NAME', '')
 if len(TITLE_NAME) == 0:
@@ -507,7 +509,7 @@ if len(TITLE_NAME) == 0:
     
 COVER_IMAGE = environ.get('COVER_IMAGE', '')
 if len(COVER_IMAGE) == 0:
-    COVER_IMAGE = 'https://graph.org/file/60f9f8bcb97d27f76f5c0.jpg'
+    COVER_IMAGE = 'https://te.legra.ph/file/237953bad476d0de0b8eb.jpg'
 
 GD_INFO = environ.get('GD_INFO', '')
 if len(GD_INFO) == 0:
