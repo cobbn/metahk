@@ -30,7 +30,7 @@ psutil
 pybase64
 pycountry
 pymongo
-pyroblack
+pyrogram==2.0.106
 python-dotenv
 python-magic
 pytz
@@ -39,7 +39,7 @@ requests
 speedtest-cli
 telegraph
 tenacity
-tgcrypto-pyroblack
+tgcrypto
 uvloop
 xattr
 yt-dlp
