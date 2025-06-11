@@ -33,6 +33,7 @@ from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.ext_utils.telegraph_helper import telegraph
 from bot.helper.ext_utils.shortners import short_url
+from pyrogram import __version__ as pyrover
 
 THREADPOOL   = ThreadPoolExecutor(max_workers=1000)
 MAGNET_REGEX = r'magnet:\?xt=urn:(btih|btmh):[a-zA-Z0-9]*\s*'
@@ -166,7 +167,7 @@ def get_all_versions():
     except FileNotFoundError:
         vr = ''
     try:
-        vpy = get_distribution('pyrogram').version
+        vpy = pyrover
     except DistributionNotFound:
         try:
             vpy = get_distribution('pyrofork').version
@@ -192,7 +193,7 @@ class EngineStatus:
         self.STATUS_GD = f"Google-API v{version_cache['gapi']}"
         self.STATUS_MEGA = f"MegaSDK v{version_cache['mega']}"
         self.STATUS_QB = f"qBit {version_cache['qbit']}"
-        self.STATUS_TG = f"PyroMulti v{version_cache['pyro']}"
+        self.STATUS_TG = f"PyroBlack v{pyrover}"
         self.STATUS_YT = f"yt-dlp v{version_cache['ytdlp']}"
         self.STATUS_EXT = "pExtract v2"
         self.STATUS_SPLIT_MERGE = f"ffmpeg v{version_cache['ffmpeg']}"
