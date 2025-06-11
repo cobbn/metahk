@@ -40,7 +40,7 @@ requests
 speedtest-cli
 telegraph
 tenacity
-tgcrypto
+tgcrypto-pyroblack
 uvloop
 xattr
 yt-dlp[default,curl-cffi]
