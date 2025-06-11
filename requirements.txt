@@ -30,7 +30,8 @@ psutil
 pybase64
 pycountry
 pymongo
-pyrogram==2.0.106
+#pyrogram==2.0.106
+pyroblack==2.3.84
 python-dotenv
 python-magic
 pytz
